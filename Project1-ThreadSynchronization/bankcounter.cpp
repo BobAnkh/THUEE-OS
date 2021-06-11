@@ -16,12 +16,12 @@ const int COUNTER_NUM = 2; // 定义柜台数量
 
 struct Customer
 {
-    pthread_t pID;          //线程 id
-    int id;                 //客户序号
-    int arrive_time;        //客户到达的时刻
-    int service_duration;   //客户需要服务的时长
-    int service_start;      //服务开始的时刻
-    int counter_id;         //服务柜员号
+    pthread_t pID;        //线程 id
+    int id;               //客户序号
+    int arrive_time;      //客户到达的时刻
+    int service_duration; //客户需要服务的时长
+    int service_start;    //服务开始的时刻
+    int counter_id;       //服务柜员号
     Customer(int cus_id, int a_time, int s_duration)
     {
         pID = 0;
@@ -33,8 +33,8 @@ struct Customer
 
 struct Counter
 {
-    pthread_t pID;          //线程 id
-    int id;                 //柜台序号
+    pthread_t pID; //线程 id
+    int id;        //柜台序号
     Counter(int count_id)
     {
         pID = 0;

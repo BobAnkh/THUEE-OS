@@ -101,7 +101,7 @@ void *quicksort(void *args)
                 qsort(buffer + param.left, param.right - param.left + 1, sizeof(int), cmp);
                 pthread_mutex_lock(&mutex);
                 sortedNum += param.right - param.left + 1;
-                cout << "[DIRECT SORT] left:" << param.left << " right:" << param.right <<" sorted:"<< sortedNum << endl;
+                cout << "[DIRECT SORT] left:" << param.left << " right:" << param.right << " sorted:" << sortedNum << endl;
                 pthread_mutex_unlock(&mutex);
             }
             else
@@ -111,7 +111,7 @@ void *quicksort(void *args)
                 sortedNum++;
                 task_list.push(Qparam(param.left, pos - 1));
                 sem_post(&tasks);
-                cout << "[PUSH JOB-LEFT] left:" << param.left << " rightL" << pos - 1 <<" sorted:"<< sortedNum << endl;
+                cout << "[PUSH JOB-LEFT] left:" << param.left << " rightL" << pos - 1 << " sorted:" << sortedNum << endl;
                 if (created_thread < MAX_THREAD)
                 {
                     int res = pthread_create(&pID[created_thread], NULL, quicksort, (void *)(buffer));
@@ -125,7 +125,7 @@ void *quicksort(void *args)
 
                 task_list.push(Qparam(pos + 1, param.right));
                 sem_post(&tasks);
-                cout << "[PUSH JOB-RIGHT] left:" << pos + 1 << " right:" << param.right <<" sorted:"<< sortedNum << endl;
+                cout << "[PUSH JOB-RIGHT] left:" << pos + 1 << " right:" << param.right << " sorted:" << sortedNum << endl;
                 if (created_thread < MAX_THREAD)
                 {
                     int res = pthread_create(&pID[created_thread], NULL, quicksort, (void *)(buffer));
@@ -199,7 +199,7 @@ int main()
     }
     pthread_mutex_unlock(&mutex);
     checkall_pth_finish();
-    cout<<"Write sorted data into output.txt."<<endl;
+    cout << "Write sorted data into output.txt." << endl;
     // 将buffer中排好的数写入输出文件中
     ofstream output("output.txt", ios::out);
     for (int n = 0; n < SORT_NUM; n++)
@@ -216,6 +216,7 @@ int main()
         perror("[ERROR]Fail to munmap\n");
         exit(4);
     }
-    cout << "Program finished!\nYou can run `make check` to see if the sort is correct.\n" << endl;
+    cout << "Program finished!\nYou can run `make check` to see if the sort is correct.\n"
+         << endl;
     return 0;
 }
