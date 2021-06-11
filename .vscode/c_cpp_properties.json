@@ -1,0 +1,22 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/lib/modules/4.15.0-142-generic/build/include",
+                "/lib/modules/4.15.0-142-generic/build/arch/x86/include",
+                "/lib/modules/4.15.0-142-generic/build/include/generated",
+                // "/usr/src/linux-headers-4.15.0-142/arch/ia64/include"
+                // "/usr/src/linux-headers-4.15.0-142-generic/arch/x86/include/",
+                "/usr/src/linux-headers-4.15.0-142-generic/arch/x86/include/generated/"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/gcc",
+            "cStandard": "gnu11",
+            "cppStandard": "gnu++14",
+            "intelliSenseMode": "linux-gcc-x64"
+        }
+    ],
+    "version": 4
+}
