@@ -34,9 +34,9 @@ Use kbuild standard to write a Makefile. Use `make` or `make modules` to build t
 
 使用kbuild标准来编写Makefile。使用`make`或`make modules`命令来构建模块。使用`make install`来添加模块到内核并且挂载对应的设备。使用`make test`来编译读和写的测试程序。
 
-Run `sudo ./writetest.exe` and enter whatever you want in the terminal to write into the pipe. Run `sudo ./readtest.exe` and enter how much bytes you want to read from the pipe.
+Run `sudo ./writetest.exe` and enter whatever you want in the terminal, which will be writen into the pipe. Run `sudo ./readtest.exe` and enter how much bytes you want to read from the pipe.
 
-运行`sudo ./writetest.exe`并输入任何你想要的内容在终端，将写入到管道中。运行`sudo ./readtest.exe`并输入你想要从管道中读取的字节数。
+运行`sudo ./writetest.exe`并在终端输入任何你想要输入的内容，这些内容将会被写入到管道中。运行`sudo ./readtest.exe`并输入你想要从管道中读取的字节数。
 
 Use `make uninstall` to remove the device and kernel module.
 
