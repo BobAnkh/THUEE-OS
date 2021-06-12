@@ -214,7 +214,7 @@ static int __init mypipe_init(void)
         goto unregister;
     }
     memset(buffer, 0, BUF_SIZE);
-    // 初始化互动信号量为1
+    // 初始化互斥信号量为1
     sema_init(&mutex, 1);
 
     return 0;
@@ -229,6 +229,7 @@ static void __exit mypipe_exit(void)
     // 注销字符设备
     unregister_chrdev(MYPIPE_MAJOR, DEVICE_NAME);
     down(&mutex);
+    // 释放内存
     if (buffer)
         kfree(buffer);
     printk(KERN_EMERG DEVICE_NAME " removed successfully.\n");
