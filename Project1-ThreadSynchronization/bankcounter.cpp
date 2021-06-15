@@ -12,7 +12,7 @@ using namespace std;
 
 #define _REENTRANT //保证pthread多线程安全
 
-const int COUNTER_NUM = 2; // 定义柜台数量
+const int COUNTER_NUM = 2; // 定义柜员数量
 
 struct Customer
 {
@@ -34,7 +34,7 @@ struct Customer
 struct Counter
 {
     pthread_t pID; //线程 id
-    int id;        //柜台序号
+    int id;        //柜员序号
     Counter(int count_id)
     {
         pID = 0;
@@ -42,12 +42,12 @@ struct Counter
     }
 };
 
-// 定义存放全部顾客和全部柜台信息的vector, 定义顾客等待队列queue
+// 定义存放全部顾客和全部柜员信息的vector, 定义顾客等待队列queue
 vector<Customer> customer_list;
 vector<Counter> counter_list;
 queue<Customer *> customer_waiting;
 
-// 定义互斥访问锁以及顾客和柜台信号量
+// 定义互斥访问锁以及顾客和柜员信号量
 pthread_mutex_t mutex;
 sem_t customer_sem;
 sem_t counter_sem;
@@ -79,13 +79,13 @@ void write_output(const char *filename)
     }
 }
 
-// 检查是否所有顾客线程都已进行完成并关闭柜台线程
+// 检查是否所有顾客线程都已进行完成并关闭柜员线程
 void checkall_pth_finish()
 {
     // 检查所有顾客线程是否结束
     for (auto customer : customer_list)
         pthread_join(customer.pID, NULL);
-    // 关闭所有柜台线程
+    // 关闭所有柜员线程
     for (auto counter : counter_list)
     {
         pthread_cancel(counter.pID);
@@ -118,18 +118,18 @@ void *customer_thread(void *arg)
     return NULL;
 }
 
-// 柜台线程
+// 柜员线程
 void *counter_thread(void *arg)
 {
     Counter &counter = *(Counter *)arg;
     while (true)
     {
-        // 柜台等待顾客
+        // 柜员等待顾客
         sem_wait(&customer_sem);
-        // 在柜台线程工作期间不能取消线程
+        // 在柜员线程工作期间不能取消线程
         pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
 
-        // 柜台叫号(从等待队列中取出顾客)
+        // 柜员叫号(从等待队列中取出顾客)
         pthread_mutex_lock(&mutex);
         Customer &customer = *customer_waiting.front();
         customer.counter_id = counter.id;
@@ -139,7 +139,7 @@ void *counter_thread(void *arg)
         sem_post(&counter_sem);
         pthread_mutex_unlock(&mutex);
 
-        // 模拟柜台服务顾客
+        // 模拟柜员服务顾客
         sleep(customer.service_duration);
         pthread_mutex_lock(&mutex);
         cout << "[COUNTER] id " << counter.id << " finish serving customer " << customer.id << " at " << time(NULL) - program_start_time << endl;
@@ -161,11 +161,11 @@ int main()
     cout << "Read input file..." << endl;
     read_input("input.txt");
     program_start_time = time(NULL);
-    // 添加柜台
+    // 添加柜员
     for (int i = 0; i < COUNTER_NUM; i++)
         counter_list.push_back(Counter(i + 1));
 
-    // 产生顾客线程和柜台线程
+    // 产生顾客线程和柜员线程
     for (int i = 0; i < COUNTER_NUM; i++)
     {
         int res = pthread_create(&(counter_list[i].pID), NULL, counter_thread, (void *)(&counter_list[i]));
@@ -189,7 +189,7 @@ int main()
         }
     }
 
-    // 检查是否所有顾客线程都已进行完成并关闭柜台线程
+    // 检查是否所有顾客线程都已进行完成并关闭柜员线程
     checkall_pth_finish();
     // 销毁互斥锁和信号量
     pthread_mutex_destroy(&mutex);
