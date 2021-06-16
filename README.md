@@ -10,9 +10,9 @@ Use `g++ BankCounter.cpp -o bankcounter.exe -std=c++11 -lpthread` or `make` to c
 
 使用命令`g++ BankCounter.cpp -o bankcounter.exe -std=c++11 -lpthread` 或者 `make`在Linux上编译程序。
 
-Run `./bankcounter.exe` to perform the algorithm. Result will be put in `output.txt`.
+Put your test example in `input.txt`. Run `./bankcounter.exe` to perform the algorithm. Result will be put in `output.txt`.
 
-执行`./bankcounter.exe`来运行该算法。结果将会被放在`output.txt`文件中
+在`input.txt`文件中放置你的测试样例。执行`./bankcounter.exe`来运行该算法。结果将会被放在`output.txt`文件中
 
 ## Project2-IPC 实验二: 高级进程间通信问题——快速排序问题
 
