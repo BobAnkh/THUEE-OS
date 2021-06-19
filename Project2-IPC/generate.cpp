@@ -15,7 +15,6 @@ int main()
 {
     int d;
     ofstream output("input.txt", ios::out);
-    ofstream ground_truth("groud_truth.txt", ios::out);
     FILE *fp = fopen("input.dat", "wb");
     random_device rd;
     mt19937_64 eng(rd());
