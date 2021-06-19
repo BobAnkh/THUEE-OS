@@ -37,8 +37,8 @@ pthread_t pID[MAX_THREAD];
 int created_thread = 0;
 
 // 定义排序任务队列和信号量
-queue<Qparam> task_list;
-sem_t tasks;
+queue<Qparam> job_queue;
+sem_t jobs;
 
 // 标记排序任务全部完成
 int sortedNum = 0;
@@ -75,6 +75,7 @@ void *quicksort(void *args)
     int *buffer = (int *)args;
     while (true)
     {
+        // 检查是否完成排序
         if (sortedNum == SORT_NUM && sorted == false)
         {
             pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
@@ -87,15 +88,17 @@ void *quicksort(void *args)
             pthread_mutex_unlock(&mutex);
             pthread_setcancelstate(PTHREAD_CANCEL_ENABLE, NULL);
         }
-        sem_wait(&tasks);
+        // 抓取新任务
+        sem_wait(&jobs);
         pthread_setcancelstate(PTHREAD_CANCEL_DISABLE, NULL);
         pthread_mutex_lock(&mutex);
-        Qparam param = task_list.front();
+        Qparam param = job_queue.front();
         cout << "[FETCH JOB] left:" << param.left << " right:" << param.right << endl;
-        task_list.pop();
+        job_queue.pop();
         pthread_mutex_unlock(&mutex);
         if (param.left <= param.right)
         {
+            // 直接进行排序
             if (param.right - param.left < DIRECT_SORT)
             {
                 qsort(buffer + param.left, param.right - param.left + 1, sizeof(int), cmp);
@@ -109,8 +112,9 @@ void *quicksort(void *args)
                 int pos = partition(buffer, param);
                 pthread_mutex_lock(&mutex);
                 sortedNum++;
-                task_list.push(Qparam(param.left, pos - 1));
-                sem_post(&tasks);
+                // 向队列中推入左作业
+                job_queue.push(Qparam(param.left, pos - 1));
+                sem_post(&jobs);
                 cout << "[PUSH JOB-LEFT] left:" << param.left << " rightL" << pos - 1 << " sorted:" << sortedNum << endl;
                 if (created_thread < MAX_THREAD)
                 {
@@ -123,8 +127,9 @@ void *quicksort(void *args)
                     created_thread++;
                 }
 
-                task_list.push(Qparam(pos + 1, param.right));
-                sem_post(&tasks);
+                // 向队列中推入右作业
+                job_queue.push(Qparam(pos + 1, param.right));
+                sem_post(&jobs);
                 cout << "[PUSH JOB-RIGHT] left:" << pos + 1 << " right:" << param.right << " sorted:" << sortedNum << endl;
                 if (created_thread < MAX_THREAD)
                 {
@@ -164,7 +169,7 @@ int main()
 {
     // 初始化互斥锁和信号量
     pthread_mutex_init(&mutex, NULL);
-    sem_init(&tasks, 0, 0);
+    sem_init(&jobs, 0, 0);
     sem_init(&finished, 0, 0);
 
     // 共享内存
@@ -184,8 +189,8 @@ int main()
     close(fd);
     // 开启第一个线程
     pthread_mutex_lock(&mutex);
-    task_list.push(Qparam(0, SORT_NUM - 1));
-    sem_post(&tasks);
+    job_queue.push(Qparam(0, SORT_NUM - 1));
+    sem_post(&jobs);
     cout << "[MAIN JOB] " << 0 << " " << SORT_NUM - 1 << endl;
     if (created_thread < MAX_THREAD)
     {
@@ -208,7 +213,7 @@ int main()
     }
     // 销毁互斥锁和信号量
     pthread_mutex_destroy(&mutex);
-    sem_destroy(&tasks);
+    sem_destroy(&jobs);
     sem_destroy(&finished);
     // 关闭共享内存
     if (munmap(buffer, sizeof(int) * SORT_NUM))
