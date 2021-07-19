@@ -4,6 +4,10 @@ THUEE Operating System course homework(including projects)
 
 清华大学电子工程系操作系统课程作业(包括课程大作业)
 
+See the following instructions for simple usage. More details can be found in the report of each project.
+
+简单使用见下方指导，更多细节可以在每个实验的报告中找到。
+
 ## Project1-ThreadSynchronization 实验一: 进程间同步/互斥问题——银行柜员服务问题
 
 Use `g++ BankCounter.cpp -o bankcounter.exe -std=c++11 -lpthread` or `make` to compile the program in Linux.
@@ -12,7 +16,7 @@ Use `g++ BankCounter.cpp -o bankcounter.exe -std=c++11 -lpthread` or `make` to c
 
 Put your test example in `input.txt`. Run `./bankcounter.exe` to perform the algorithm. Result will be put in `output.txt`.
 
-在`input.txt`文件中放置你的测试样例。执行`./bankcounter.exe`来运行该算法。结果将会被放在`output.txt`文件中
+在`input.txt`文件中放置你的测试样例。执行`./bankcounter.exe`来运行该算法。结果将会被放在`output.txt`文件中。
 
 ## Project2-IPC 实验二: 高级进程间通信问题——快速排序问题
 
@@ -26,7 +30,7 @@ Run `./quicksort.exe` to perform multi-thread quicksort. Results will be put in 
 
 Use `make check` to check if the data in `output.txt` is correctly sorted.
 
-使用`make check`来检查文件`output.txt`中的数据是否被正确排序
+使用`make check`来检查文件`output.txt`中的数据是否被正确排序。
 
 ## Project5-Driver 实验五: 驱动程序问题——管道驱动程序开发
 
